@@ -1,3 +1,4 @@
+.hg
 .history/
 .dep
 *.o
