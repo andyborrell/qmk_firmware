@@ -1,3 +1,5 @@
+#define LAG(kc) (QK_LALT | QK_LGUI | (kc))
+
 void led_set_user(uint8_t usb_led) {
     if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
         DDRB |= (1 << 2); PORTB &= ~(1 << 2);
@@ -279,10 +281,10 @@ bool LeftShiftPlusKey(uint16_t keycode)
   switch (keycode)
   {
   case KC_F9:
-    SEND_STRING("9");
+    SEND_STRING("9");  // (
     return false;
   case KC_F10:
-    SEND_STRING("0");
+    SEND_STRING("0");  // ) 
     return false;
   case KC_I:
     SEND_STRING(SS_UP(X_LSHIFT));
@@ -305,7 +307,19 @@ bool LeftShiftPlusKey(uint16_t keycode)
     SEND_STRING(SS_DOWN(X_LSHIFT));
     return false;
   case MAGIC_SCOLON:
-    SEND_STRING(";");
+    SEND_STRING(";");  // becomes :
+    return false;
+  case KC_SEND_SPECIAL_STR_1:
+    SEND_STRING("A");
+    return false;
+  case KC_SEND_SPECIAL_STR_2:
+    SEND_STRING("B");
+    return false;
+  case KC_SEND_SPECIAL_STR_3:
+    SEND_STRING("C");
+    return false;
+  case KC_SEND_SPECIAL_STR_4:
+    SEND_STRING("D");
     return false;
   }
   

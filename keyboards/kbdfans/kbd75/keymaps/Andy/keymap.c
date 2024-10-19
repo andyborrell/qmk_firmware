@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+
 #define ______ KC_TRNS
 #define _______ KC_TRNS
 #define ________ KC_TRNS
@@ -12,6 +13,10 @@
 enum custom_keycodes {
      CUSTOM_LEFT_SHIFT = SAFE_RANGE,
      MAGIC_SCOLON,
+    KC_SEND_SPECIAL_STR_1,
+    KC_SEND_SPECIAL_STR_2,
+    KC_SEND_SPECIAL_STR_3,
+    KC_SEND_SPECIAL_STR_4,
      SHIFT_LEFT_KEYS,
      MAGIC_THUMB1,
      MAGIC_THUMB2,
@@ -61,15 +66,21 @@ enum {
 #define _QM 7
 #define _NUMKEYS 8
 #define _NUM 9
+
+
+
+#include "../../../include/andy_util.h"
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_BL] = LAYOUT(
-        KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_F14, KC_DEL, 
-        KC_CAPS, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, ______, KC_BSPC, KC_INSERT,
-        KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC, KC_DEL, KC_BSPC, KC_PGUP,
+        KC_ESC, LAG(KC_F1), LAG(KC_F2), LAG(KC_F3), LAG(KC_F4), LAG(KC_F5), LAG(KC_F6), LAG(KC_F7), LAG(KC_F8), LAG(KC_F9), LAG(KC_F10), LAG(KC_F11), LAG(KC_F12), KC_PSCR, KC_F15, KC_DEL, 
+        KC_CAPS, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, ______,KC_BSPC , KC_INS,
+        KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC, KC_F14, KC_MEH, KC_PGUP,
         MO(_FL), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, MAGIC_SCOLON, KC_QUOT, KC_ENT, KC_PGDN,
         KC_LSFT, _______, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, ______, KC_RALT, KC_UP, KC_F13, // Right shift disabled
-        KC_LCTL, KC_LGUI, KC_LALT, MAGIC_THUMB1, MAGIC_THUMB2, KC_RCTL, KC_RALT, KC_LGUI, MO(_ML), KC_LEFT, KC_DOWN, KC_RGHT),
+        KC_LCTL, KC_LGUI, KC_LALT, MAGIC_THUMB1, MAGIC_THUMB2, KC_RCTL, KC_RALT, KC_MEH, MO(_ML), KC_LEFT, KC_DOWN, KC_RGHT),
 
     [_SL] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -103,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, KC_BTN1, XXXXXXX, KC_BTN1, _______, _______, _______, _______, ______, _______),                                     // 10 keys
 
     [_NUMKEYS] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, //16 keys
+        _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, _______, _______, _______, //16 keys
         _______, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______, _______, _______, _______, _______,                               //16 keys
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          // 15 keys
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   // 14 keys
@@ -112,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ),
     [_ML] = LAYOUT(
         RESET, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE,
-        _______, _______, _______, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_P0, KC_PMNS, KC_PPLS, __________, _______, _______,
+        _______, TG(_NUMKEYS), _______, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_P0, KC_PMNS, KC_PPLS, __________, _______, _______,
         ________, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, _______, _______, _______, _______, _______,        // 15 keys
         __________, RGB_HUI,RGB_MOD, RGB_MODE_PLAIN,  RGB_VAI, _______, _______, KC_P1, KC_P2, KC_P3, _______, _______, KC_PENT, _______,              // 14 keys
         BL_INC, _______, RGB_TOG, KC_PAST, KC_CALC, _______, _______, _______, KC_NLCK, KC_P0, KC_PDOT, KC_PSLS, __________, KC_VOLU, TG(_NUMKEYS), // 14 keys
@@ -138,5 +149,3 @@ _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  
 _______,  _______,  _______,  _______,  _______,   _______,  _______,   _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,
 _______,  _______,  _______,                      _______   ,  _______,  _______,                      _______,  _______,  _______,  _______,  _______,  _______
 */
-
-#include "../../../include/andy_util.h"
