@@ -10,14 +10,21 @@ void led_set_user(uint8_t usb_led) {
 bool magicThumb1Pressed = false;
 bool magicThumb2Pressed = false;
 
+bool fake_lgui_down = false;
 
 bool leftshiftPressed = false;
 bool leftCtrlPressed = false;
 bool rightCtrlPressed = false;
 bool rightshiftPressed = false;
+bool leftAltPressed = false;
 bool spacePressed = false;
 bool numLayerActive = false;
 int keysSinceNumLayer = 0;
+
+
+enum {MODE_WINDOWS = 0, MODE_MACOS = 1};
+int custom_mode = MODE_WINDOWS;
+int num_custom_modes = 2;
 
 void PrintInt(int a)
 {
@@ -118,6 +125,13 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         return false;
     }
    }
+   case MACRO_CHANGE_MODE: {
+    if (record->event.pressed) {
+        custom_mode = (custom_mode + 1) % num_custom_modes;
+        return false;
+    }
+   }
+   
 
   }
   if (record->event.pressed) {
@@ -419,6 +433,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(_SL);
             }
             return false; 
+
+      case KC_LALT:
+        if (record->event.pressed) {
+          leftAltPressed = true;
+        } else {
+          leftAltPressed = false;
+          if (fake_lgui_down)
+          {
+            unregister_code(KC_LGUI);
+            fake_lgui_down = false;
+            return false;
+          }
+        }
+        return true;
+      
+      case KC_TAB:
+        if (record->event.pressed) {
+          if (leftAltPressed && custom_mode == MODE_MACOS)
+          {
+            fake_lgui_down = true;
+            unregister_code(KC_LALT);
+            register_code(KC_LGUI);
+          }
+        } 
+        return true;
+      
     default:
       if (record->event.pressed)
       {
