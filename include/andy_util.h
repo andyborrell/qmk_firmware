@@ -22,9 +22,10 @@ bool leftAltPressed    = false;
 bool spacePressed      = false;
 bool numLayerActive    = false;
 int  keysSinceNumLayer = 0;
+int  keysSinceMagicSemiColonLayer = 0;
 
 enum { MODE_WINDOWS = 0, MODE_MACOS = 1 };
-int custom_mode      = MODE_WINDOWS;
+int custom_mode      = MODE_MACOS;
 int num_custom_modes = 2;
 
 void PrintInt(int a) {
@@ -111,6 +112,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) {
         case MACRO_CHANGE_MODE: {
             if (record->event.pressed) {
                 custom_mode = (custom_mode + 1) % num_custom_modes;
+                eeconfig_update_user(custom_mode);
                 return false;
             }
         }
@@ -177,6 +179,9 @@ void DS(void) {
         SEND_STRING("X");
     }
 }
+
+// This allows the _NUM layer to be used *while* left and center space keys are held down.  I never actually
+// use this but the layer could be used for something else.
 void UpdateThumbButtons(void) {
     // DebugThumbState();
 
@@ -331,15 +336,15 @@ bool LeftShiftPlusKey(uint16_t keycode) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         keysSinceNumLayer++;
+        keysSinceMagicSemiColonLayer++;
     }
 
-    if (leftshiftPressed && record->event.pressed) {
+    if (leftshiftPressed && !leftCtrlPressed && keycode != KC_LSFT && keycode != KC_LCTL && record->event.pressed) {
         return LeftShiftPlusKey(keycode);
     }
 
     switch (keycode) {
         case KC_LSFT:
-
             if (record->event.pressed) {
                 leftshiftPressed = true;
                 // Do something when pressed
@@ -368,11 +373,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // Do something else when release
             }
             return true;
-            // case CONTROL_OR_SHIFT:
-            // controlOrShiftKeyPressed = record->event.pressed;
-            // bool numLayerActive = IS_LAYER_ON(_NUM);
-            // bool newRightCtrlPressed = controlOrShiftKeyPressed && !numLayerActive;
-            // bool newRightShiftPressed = controlOrShiftKeyPressed && numLayerActive;
 
         case KC_RCTL:
             if (record->event.pressed) {
@@ -386,6 +386,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case KC_QUOT:
             if (rightshiftPressed && record->event.pressed) {
+                // Not using this. Could remap it.
+                SEND_STRING(SS_UP(X_LSHIFT));
+                SEND_STRING("}");
+                SEND_STRING(SS_DOWN(X_LSHIFT));
                 SEND_STRING("-");  // will become _
                 return false;
             } else {
@@ -404,8 +408,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MAGIC_SCOLON:
             if (record->event.pressed) {
                 layer_on(_SL);
+                keysSinceMagicSemiColonLayer = 0;
             } else {
                 layer_off(_SL);
+                if (keysSinceMagicSemiColonLayer == 0)
+                {
+                  register_code(KC_F16);
+                  unregister_code(KC_F16);
+                }
             }
             return false;
 
@@ -445,4 +455,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             return true;  // Process all other keycodes normally
     }
+}
+void keyboard_post_init_user(void) {
+  custom_mode = eeconfig_read_user();
 }
