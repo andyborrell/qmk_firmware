@@ -83,9 +83,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         MO(_FL), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, MAGIC_SCOLON, KC_QUOT, KC_ENT, KC_PGDN,
         KC_LSFT, _______, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, ______, MO(_SWITCHER), KC_UP, KC_F13, // Right shift disabled
         KC_LCTL, KC_LGUI, KC_LALT, MAGIC_THUMB1, MAGIC_THUMB2, KC_RCTL, KC_LALT, KC_MEH, MO(_ML), KC_LEFT, KC_DOWN, KC_RGHT),
-
+ 
     [_SL] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, KC_SEND_SPECIAL_STR_1, _______, _______, _______, KC_SEND_SPECIAL_STR_2, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, KC_U_1, KC_U_2, KC_U_3, KC_U_4, KC_U_5, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, KC_1, KC_2, KC_3, KC_4, KC_5, ______, M(MACRO_PIPE), KC_MINS, KC_PLUS, _______, _______, _______, _______, _______,
         _______, KC_6, KC_7, KC_8, KC_9, KC_0, KC_DOUBLE_QUOTE, KC_ENT, KC_UNDERSCORE, KC_EQL, _______, _______, _______, _______,

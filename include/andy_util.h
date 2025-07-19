@@ -14,14 +14,14 @@ bool magicThumb2Pressed = false;
 
 bool fake_lgui_down = false;
 
-bool leftshiftPressed  = false;
-bool leftCtrlPressed   = false;
-bool rightCtrlPressed  = false;
-bool rightshiftPressed = false;
-bool leftAltPressed    = false;
-bool spacePressed      = false;
-bool numLayerActive    = false;
-int  keysSinceNumLayer = 0;
+bool leftshiftPressed             = false;
+bool leftCtrlPressed              = false;
+bool rightCtrlPressed             = false;
+bool rightshiftPressed            = false;
+bool leftAltPressed               = false;
+bool spacePressed                 = false;
+bool numLayerActive               = false;
+int  keysSinceNumLayer            = 0;
 int  keysSinceMagicSemiColonLayer = 0;
 
 enum { MODE_WINDOWS = 0, MODE_MACOS = 1 };
@@ -316,11 +316,15 @@ bool LeftShiftPlusKey(uint16_t keycode) {
         case MAGIC_SCOLON:
             SEND_STRING(";");  // becomes :
             return false;
-        case KC_SEND_SPECIAL_STR_1:
-            SEND_STRING("A");
-            return false;
         case KC_SEND_SPECIAL_STR_2:
-            SEND_STRING("B");
+            SEND_STRING(SS_UP(X_LSHIFT));
+            SEND_STRING("FOO");
+            SEND_STRING(SS_DOWN(X_LSHIFT));
+            return false;
+        case KC_SEND_SPECIAL_STR_1:
+            SEND_STRING(SS_UP(X_LSHIFT));
+            SEND_STRING("BAR");
+            SEND_STRING(SS_DOWN(X_LSHIFT));
             return false;
         case KC_SEND_SPECIAL_STR_3:
             SEND_STRING("C");
@@ -411,10 +415,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 keysSinceMagicSemiColonLayer = 0;
             } else {
                 layer_off(_SL);
-                if (keysSinceMagicSemiColonLayer == 0)
-                {
-                  register_code(KC_F16);
-                  unregister_code(KC_F16);
+                if (keysSinceMagicSemiColonLayer == 0) {
+                    register_code(KC_F16);
+                    unregister_code(KC_F16);
                 }
             }
             return false;
@@ -456,6 +459,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;  // Process all other keycodes normally
     }
 }
-void keyboard_post_init_user(void) {
-  custom_mode = eeconfig_read_user();
-}
+void keyboard_post_init_user(void) { custom_mode = eeconfig_read_user(); }
