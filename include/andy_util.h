@@ -415,10 +415,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 keysSinceMagicSemiColonLayer = 0;
             } else {
                 layer_off(_SL);
-                if (keysSinceMagicSemiColonLayer == 0) {
+                // Disabling this because too easy to accidentally do
+                /*if (keysSinceMagicSemiColonLayer == 0) {
                     register_code(KC_F16);
                     unregister_code(KC_F16);
-                }
+                }*/
             }
             return false;
 
